@@ -1,0 +1,71 @@
+###########################################################
+
+### POST  CRUD
+
+### Add a New Post
+POST http://localhost:3000/post
+Content-Type: application/json
+
+{
+    "title": "My First Post",
+    "content": "Hello World!",
+    "userName": "user1"
+}
+
+### Get All Posts
+GET  http://localhost:3000/post
+
+### Get a Post by ID - /post/<post_id>
+GET http://localhost:3000/post/696b6a5d4891d393938a9a62
+
+### Get Posts by Sender - /post?sender=<sender_id>
+GET http://localhost:3000/post?sender=user1
+
+### Update a Post - /post/<post_id>
+### Update a Post
+PUT http://localhost:3000/post/696b67d0fa375e48dcf9146c
+Content-Type: application/json
+
+{
+  "title": "Updated Post Title",
+  "content": "Updated content of the post",
+  "userName": "user11"
+}
+
+
+### Delete a Post - /post/<post_is>
+DELETE http://localhost:3000/post/696b6a5d4891d393938a9a62
+
+
+###########################################################
+
+## COMMENTS CRUD
+
+### Add a New Comment - /post/<post_id>/comment
+POST http://localhost:3000/post/696b6a5d4891d393938a9a62/comment
+Content-Type: application/json
+
+{
+    "userName": "avia",
+    "content": "dfjkfdk"
+}
+
+### Get all Comments for a Post  - /post/<post_id>/comment
+GET http://localhost:3000/post/696b6a5d4891d393938a9a62/comment
+
+### Get All Comments
+GET http://localhost:3000/comment
+
+### Get Comment by ID - /comment/<comment_id>
+GET http://localhost:3000/comment/696b6a5d4891d393938a9a62
+
+### Update a Comment - /comment/comment_id
+PUT http://localhost:3000/comment/696b847ba571a552f2dd4654
+Content-Type: application/json
+
+{
+    "userName": "mer",
+    "content": "dfjkfdk"
+}
+### Delete comment by ID - /comment/comment_id
+DELETE http://localhost:3000/comment/696b847ba571a552f2dd4654

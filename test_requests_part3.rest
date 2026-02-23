@@ -1,0 +1,99 @@
+# Part 3: Authentication - Test Requests
+
+### 1. Register a New User
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+# You'll get: accessToken, refreshToken, and user info
+# Copy the refreshToken for the refresh and logout endpoints below
+
+###
+
+### 2. Login with Existing User
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+# You'll get: accessToken, refreshToken, and user info
+# Copy the refreshToken below
+
+###
+
+### 3. Refresh Access Token (with token rotation - you'll get a NEW refresh token!)
+POST http://localhost:3000/auth/refresh
+Authorization: Bearer PASTE_REFRESH_TOKEN_HERE
+
+# Now uses Authorization header instead of body!
+# You'll get BOTH a new accessToken AND a new refreshToken
+# Save the NEW refreshToken for future requests
+
+###
+
+### 4. Logout (invalidate refresh token)
+POST http://localhost:3000/auth/logout
+Authorization: Bearer PASTE_REFRESH_TOKEN_HERE
+
+# Now uses Authorization header instead of body!
+# This deletes the refresh token from database
+
+###
+
+### Test Error Cases & Security Features:
+
+### Invalid Email/Password
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "wrong@example.com",
+  "password": "wrongpassword"
+}
+
+###
+
+### Missing Fields in Registration
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "test"
+}
+
+###
+
+### Duplicate User Registration
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+
+### Invalid Refresh Token
+POST http://localhost:3000/auth/refresh
+Authorization: Bearer invalid-token-12345
+
+###
+
+### Token Reuse Detection (Security Feature!)
+# 1. First, do a refresh request and save BOTH tokens
+# 2. Do another refresh with the NEW token (works fine)
+# 3. Try to use the OLD token again → ALL tokens invalidated!
+POST http://localhost:3000/auth/refresh
+Authorization: Bearer OLD_TOKEN_THAT_WAS_ALREADY_USED
+
+# Expected: 403 "Token reuse detected - all tokens invalidated for security"

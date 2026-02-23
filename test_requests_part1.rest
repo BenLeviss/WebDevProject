@@ -1,0 +1,37 @@
+# Part 1: User Model & CRUD - Test Requests
+
+### Create User (Registration)
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+###
+
+### Get All Users
+GET http://localhost:3000/user
+
+###
+
+### Get User by ID
+GET http://localhost:3000/user/6974cc14c8e3a8f8ab40a6a3
+
+###
+
+### Update User
+PUT http://localhost:3000/user/6974cc14c8e3a8f8ab40a6a3
+Content-Type: application/json
+
+{
+  "firstName": "Johnny",
+  "bio": "Updated bio!"
+}
+
+###
+
+### Delete User
+DELETE http://localhost:3000/user/6974cc14c8e3a8f8ab40a6a3

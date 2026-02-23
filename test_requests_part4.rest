@@ -1,0 +1,198 @@
+# Part 4: Authentication Middleware - Test Requests
+
+## Prerequisites
+1. Register and/or login to get access token
+2. Copy the accessToken from the response
+3. Use it in the Authorization header for all protected routes
+
+---
+
+## 1. Public Routes (No Token Required)
+
+### Register
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "email": "alice@example.com",
+  "password": "password123"
+}
+
+###
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "password123"
+}
+
+###
+
+---
+
+## 2. Create Content (Token Required, userId Automatic)
+
+### Create a Post (userId automatically set from token)
+POST http://localhost:3000/post
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+Content-Type: application/json
+
+{
+  "title": "My First Secure Post",
+  "content": "This was created with authentication!"
+}
+
+# NOTE: No need to send userId - it's extracted from your token!
+# Save the post _id for later tests
+
+###
+
+### Create a Comment (userId automatically set from token)
+POST http://localhost:3000/post/69750b9e0c87514defa2527c/comment
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+Content-Type: application/json
+
+{
+  "content": "My secure comment!"
+}
+
+###
+
+# NOTE: No need to send userId - it's extracted from your token!
+
+---
+
+## 3. View Content (Token Required)
+
+### Get All Posts
+GET http://localhost:3000/post
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+
+###
+
+### Get Post by ID
+GET http://localhost:3000/post/69750b9e0c87514defa2527c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+
+###
+
+### Get All Comments
+GET http://localhost:3000/comment
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+
+###
+
+### Get User's Posts
+GET http://localhost:3000/user/6974cc41c8e3a8f8ab40a6b0/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+
+###
+
+### Get User's Comments
+GET http://localhost:3000/user/6974cc41c8e3a8f8ab40a6b0/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+Content-Type: application/json
+
+{
+  "title": "Updated Title",
+  "content": "Updated content"
+}
+
+# ✅ Should work if you own the post
+
+###
+
+### Update Own Comment
+PUT http://localhost:3000/comment/6974d8489c483306772395de
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+Content-Type: application/json
+
+{
+  "content": "Updated comment"
+}
+
+# ✅ Should work if you own the comment
+
+###
+
+### Update Own Profile
+PUT http://localhost:3000/user/6974cc41c8e3a8f8ab40a6b0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+Content-Type: application/json
+
+{
+  "bio": "Updated bio",
+  "firstName": "Alice",
+  "lastName": "Smith"
+}
+
+###
+# ✅ Should work for your own profile
+
+###
+## 5. Protected Logout
+POST http://localhost:3000/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MGFlYzlkYmU2ZTZhZmVjMTM2MGIiLCJ1c2VybmFtZSI6ImFsaWNlIiwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2OTI3ODMyMiwiZXhwIjoxNzY5Mjc5MjIyfQ.6DpcrmJ0gzNJDRMCi3QywvmjKV-0KX4neE6GDxlxoFM
+
+# No    w requires authentication!
+
+---
+
+## 6. Test Error Cases
+
+### Try to Access Without Token
+GET http://localhost:3000/post
+
+# Expected: 401 "Access token required"
+
+###
+
+### Try with Invalid Token
+GET http://localhost:3000/post
+Authorization: Bearer invalid-token-123
+
+# Expected: 403 "Invalid or expired access token"
+
+###
+
+### Try to Update Someone Else's Post
+# 1. Create a second user and login
+# 2. Get their access token
+# 3. Try to update User A's post with User B's token
+
+PUT http://localhost:3000/post/USER_A_POST_ID
+Authorization: Bearer USER_B_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "title": "Trying to hack!",
+  "content": "This shouldn't work"
+}
+
+# Expected: 403 "You can only update your own posts"
+
+###
+
+### Try to Update Someone Else's Profile
+PUT http://localhost:3000/user/OTHER_USER_ID
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "bio": "Hacking someone's profile"
+}
+
+# Expected: 403 "You can only update your own profile"
+
+---
+
+## Security Features Tested
+
+✅ **Authentication Required**: All routes except register/login require valid access token  
+✅ **Automatic User ID**: userId extracted from token (can't be faked)  
+✅ **Ownership Validation**: Users can only modify their own posts/comments/profile  
+✅ **Proper Error Codes**: 401 for missing auth, 403 for invalid auth or forbidden actions
